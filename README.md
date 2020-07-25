@@ -18,11 +18,11 @@ INSTRUCTIONS
 
 1. Run python script to convert .txt TempestExtremes files to compact 2D variables (stormID,ntrack) and convert to netcdf
 
-	Modify the input and output files in the script. Load libraries and run::
+	Modify the input and output files in the script. Load libraries and run:
 
-	module load python
-	ncar_pylib (this is to load the netcdf4 module used by python script)
-	python convert_traj_file.py
+	module load python;
+	ncar_pylib;
+	python convert_traj_file.py;
 
 	python script courtesy of Alyssa Stansfield (alyssa.stansfield@stonybrook.edu)
 
