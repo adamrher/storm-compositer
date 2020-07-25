@@ -47,6 +47,8 @@ INSTRUCTIONS
 	imonth = 0;
 	monthstr = "01";
 
+        Setting debug = True forces the script to only process the first model year.
+
 4. Submit compsite.sh as batch job, e.g., for casper:
 
 	sbatch composite.sh
