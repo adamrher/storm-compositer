@@ -34,17 +34,17 @@ INSTRUCTIONS
 
 	Set the variable to be compsited and the parameters of the PDF, e.g.:
 
-	VAR = "PRECT"
+	VAR = "PRECT";
 	sfactor = secpday*1000
 
-	nbins = 500
-	binmin = 0.
+	nbins = 500;
+	binmin = 0.;
 	binmax = 500.
 
 	Set the month to composite over, e.g.:
 
-	monthNam = "JAN"
-	imonth = 0
+	monthNam = "JAN";
+	imonth = 0;
 	monthstr = "01"
 
 4. Submit compsite.sh as batch job, e.g., for casper:
