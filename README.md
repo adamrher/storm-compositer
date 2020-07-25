@@ -41,7 +41,7 @@ INSTRUCTIONS
 	binmin = 0.;
 	binmax = 500.
 
-	Set the month to composite over, e.g.:
+	Set the month to composite over, e.g.,
 
 	monthNam = "JAN";
 	imonth = 0;
