@@ -11,7 +11,7 @@ INSTALLATION
 Create wrapper to wrap Fortran90 routine rotate2d.F90 into NCL:
 WRAPIT rotate2d.stub rotate2d.f90
 
-Original Fortran90 routine modified from:
+Original Fortran90 routine modified after:
 Peter H. Lauritzen, Christiane Jablonowski, Mark Taylor and Ramachandran D. Nair, 2010: Rotated versions of the Jablonowski steady-state and baroclinic wave test cases: A dynamical core intercomparison. J. Adv. Model. Earth Syst., Vol. 2, Art. #15, 34 pp.
 
 INSTRUCTIONS
