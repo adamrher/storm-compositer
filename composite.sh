@@ -14,6 +14,7 @@ set label = "ne30pg3.ge.45N"
 #MODEL OUTPUT
 set data_dir = "/glade/scratch/$USER/archive/"
 set case = "cam6_2_022.se_FHIST_ne30pg3_ne30pg3_mg17_1800pes_200507_mg3-Nx5yrs"
+set rdir = "/atm/hist/"
 set fincl = "h3"
 
 #SCRIP GRID FILE USED IN MODEL OUTPUT
@@ -25,4 +26,4 @@ set tname = "/glade/work/aherring/CESM2/ASP/arctic/tempestextremes/detectnodes/d
 #OUTPUT DIRECTORY
 set outdir = ""
 
-ncl 'dir="'$data_dir'"' 'fname="'$case'"' 'fincl="'$fincl'"' 'label="'$label'"' 'srcGrid="'$srcGrid'"' 'tname="'$tname'"' 'outdir="'$outdir'"' composite-v6.ncl
+ncl 'dir="'$data_dir'"' 'rdir="'$rdir'"' 'fname="'$case'"' 'fincl="'$fincl'"' 'label="'$label'"' 'srcGrid="'$srcGrid'"' 'tname="'$tname'"' 'outdir="'$outdir'"' composite-v6.ncl

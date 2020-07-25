@@ -30,7 +30,7 @@ begin
 
   wcStrt = systemfunc("date")
 
-  debug = False
+  debug = True
 
   ;;Compsite Month to be Analyzed
   monthNam = "JAN"
@@ -201,7 +201,7 @@ begin
 ; Find Relevant Model Output
 ;****************************************
 
-  files = systemfunc ("ls " + dir + fname + "/atm/hist/" + fname + ".cam."+fincl+"*")
+  files = systemfunc ("ls " + dir + fname + rdir + fname + ".cam."+fincl+"*")
 
   if (debug) then 
     nf = 12
