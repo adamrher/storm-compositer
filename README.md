@@ -28,14 +28,14 @@ python script courtesy of Alyssa Stansfield (alyssa.stansfield@stonybrook.edu)
 
 2. Modify composite.sh
 
-Need to specify location of model output, the netcdf from previous step, and the SCRIP grid file for the model output grid
+	Need to specify location of model output, the netcdf from previous step, and the SCRIP grid file for the model output grid
 
 3. Modify composite-v6.ncl
 
 Set the variable to be compsited and the parameters of the PDF, e.g.:
 
 VAR = "PRECT"
-sfactor = secpday*1000
+sfactor = secpday x 1000
 
 nbins = 500
 binmin = 0.
