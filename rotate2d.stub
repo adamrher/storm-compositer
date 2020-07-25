@@ -1,0 +1,8 @@
+C NCLFORTSTART
+      SUBROUTINE regrot(pxreg,pyreg,pxrot,pyrot,pxcen,pycen,kdim)
+      integer kdim
+      real*8 pxreg(kdim),pyreg(kdim),pxrot(kdim),pyrot(kdim)
+      real*8 pxcen,pycen
+      real*8 zxmxc(kdim),zsxmxc(kdim),zcxmxc(kdim),zsyreg(kdim),zcyreg(kdim),zsyrot(kdim),zcyrot(kdim),zcxrot(kdim),zsxrot(kdim)
+      real*8 zsycen,zcycen,zpih,pi
+C NCLEND
