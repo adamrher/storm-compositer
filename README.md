@@ -20,9 +20,9 @@ INSTRUCTIONS
 
 Modify the input and output files in the script. Load libraries and run::
 
-# module load python
-# ncar_pylib (this is to load the netcdf4 module used by python script)
-# python convert_traj_file.py
+module load python
+ncar_pylib (this is to load the netcdf4 module used by python script)
+python convert_traj_file.py
 
 python script courtesy of Alyssa Stansfield (alyssa.stansfield@stonybrook.edu)
 
@@ -34,22 +34,22 @@ Need to specify location of model output, the netcdf from previous step, and the
 
 Set the variable to be compsited and the parameters of the PDF, e.g.:
 
-# VAR = "PRECT"
-# sfactor = secpday*1000
+VAR = "PRECT"
+sfactor = secpday*1000
 
-# nbins = 500
-# binmin = 0.
-# binmax = 500.
+nbins = 500
+binmin = 0.
+binmax = 500.
 
 Set the month to composite over, e.g.:
 
-# monthNam = "JAN"
-# imonth = 0
-# monthstr = "01"
+monthNam = "JAN"
+imonth = 0
+monthstr = "01"
 
 4. Submit compsite.sh as batch job, e.g., for casper:
 
-# sbatch composite.sh
+sbatch composite.sh
 
 5. Plot composite (scripts available in plot-scripts directory)
 
