@@ -30,7 +30,7 @@ begin
 
   wcStrt = systemfunc("date")
 
-  debug = True
+  debug = False
 
   ;;Compsite Month to be Analyzed
   monthNam = "JAN"
