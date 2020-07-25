@@ -3,8 +3,7 @@
 storm-compositer takes in a .txt file from DetectNodes,StitchNodes from TempestExtremes
 (https://github.com/ClimateGlobalChange/tempestextremes)
 
-Creates 2D composite on a grid with a 20degree great circle distance about the storm center,
-and generates a PDF. Currently only works for model output on unstructured grids
+Creates 2D composite on a grid with a 20degree great circle distance about the storm center, and generates a PDF of all data used to make the composite. Currently only works for model output on unstructured grids.
 
 INSTALLATION
 
