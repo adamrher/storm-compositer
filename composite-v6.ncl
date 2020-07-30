@@ -221,7 +221,11 @@ begin
     smnths = tointeger(utc(:,1))
     delete(utc)   
 
-    indt = ind(smnths.eq.(imonth+1) .or. smnths.eq.(imonth+2))
+    if (monthNam.eq."DEC") then
+      indt = ind(smnths.eq.(imonth+1) .or. smnths.eq.1)
+    else
+      indt = ind(smnths.eq.(imonth+1) .or. smnths.eq.(imonth+2))
+    end if
 
     if (any(ismissing(indt))) then
       indraw(n) = indraw@_FillValue
