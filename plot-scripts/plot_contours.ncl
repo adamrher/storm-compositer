@@ -20,9 +20,10 @@ begin
 
   title = "JAN"
 
-  fname = (/"../composite.ne30pg3.ge.45N.PRECT.JAN.bilin.pdfx.newalg.debug.nc"/)
+  fname = (/"../composite.f09.ge.45N.PRECT.JAN.bilin.pdfx.debug.nc", \
+	    "../composite.ne30pg3.ge.45N.PRECT.JAN.bilin.pdfx.debug.nc"/)
 
-  runnams = (/"ne30pg3"/)
+  runnams = (/"f09","ne30pg3"/)
 
   nfiles = dimsizes(fname)
 

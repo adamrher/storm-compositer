@@ -114,16 +114,83 @@ begin
   delete(fdst)
 
 ;****************************************
+; Find Relevant Model Output
+;****************************************
+
+  files = systemfunc ("ls " + dir + fname + rdir + fname + ".cam."+fincl+"*")
+
+  if (debug) then
+    nf = 12
+  else
+    nf = dimsizes(files)
+  end if
+  print("total files " + nf)
+
+  indraw = new( (/nf/), "integer")
+  do n = 0,nf-1
+
+    in = addfile (files(n),"r")
+    time = in->time
+
+    if (n.eq.0) then
+      if (VAR.eq."PRECT") then
+        fVAR = "PRECC"
+      else
+        fVAR = VAR
+      end if
+ 
+      if (isfilevardim(in,fVAR,"ncol")) then
+        print("history fields on unstructured grid")
+        latlon = False
+      else
+        print("history fields on lat-lon grid")
+        latlon = True
+      end if
+    end if
+    delete(in)
+
+    utc = cd_calendar(time,0)
+    smnths = tointeger(utc(:,1))
+    delete(utc)
+
+    if (monthNam.eq."DEC") then
+      indt = ind(smnths.eq.(imonth+1) .or. smnths.eq.1)
+    else
+      indt = ind(smnths.eq.(imonth+1) .or. smnths.eq.(imonth+2))
+    end if
+
+    if (any(ismissing(indt))) then
+      indraw(n) = indraw@_FillValue
+    else
+      indraw(n) = n
+    end if
+    delete([/time,smnths,indt/])
+  end do
+
+  indgd = ind(.not.ismissing(indraw))
+  ngd = dimsizes(indgd)
+  newfiles = files(indgd)
+
+  print("total "+monthNam+" files " + ngd)
+
+;****************************************
 ; Load Trajectories
 ;****************************************
 
   in = addfile(tname,"r")
-  cicol= in->cicol
   ctime= in->time
-  delete(in)
-
-  cicol@_FillValue= default_fillvalue("integer")
   ctime@_FillValue= default_fillvalue("integer")
+
+  if (latlon) then
+    ci = in->ci
+    cj = in->cj
+    ci@_FillValue= default_fillvalue("integer")
+    cj@_FillValue= default_fillvalue("integer")
+  else
+    cicol= in->cicol
+    cicol@_FillValue= default_fillvalue("integer")
+  end if
+  delete(in)
 
   dims = dimsizes(ctime)
   nstorms = dims(0)
@@ -178,68 +245,46 @@ begin
   newcday  = new( (/newnstorms,nstime/), "integer")
   newchour = new( (/newnstorms,nstime/), "integer")  
   newctime = new( (/newnstorms,nstime/), "integer")
-  newcicol = new( (/newnstorms,nstime/), "integer")
+
+  if (latlon) then
+    newci = new( (/newnstorms,nstime/), "integer")
+    newcj = new( (/newnstorms,nstime/), "integer")
+  else
+    newcicol = new( (/newnstorms,nstime/), "integer")
+  end if
 
   newcyear = cyear(indnew,:)
   newcmonth= cmonth(indnew,:)
   newcday  = cday(indnew,:)
   newchour = chour(indnew,:)
   newctime = ctime(indnew,:)
-  newcicol = cicol(indnew,:)
-  delete([/cyear,cmonth,cday,chour,ctime,cicol/])
+  delete([/cyear,cmonth,cday,chour,ctime/])
+
+  if (latlon) then
+    newci = ci(indnew,:)
+    newcj = cj(indnew,:)
+    delete([/ci,cj/])
+  else
+    newcicol = cicol(indnew,:)
+    delete(cicol)
+  end if
 
   cyear = newcyear
   cmonth= newcmonth
   cday  = newcday
   chour = newchour
   ctime = newctime
-  cicol = newcicol
   nstorms = newnstorms
-  delete([/newcyear,newcmonth,newcday,newchour,newctime,newcicol/])
+  delete([/newcyear,newcmonth,newcday,newchour,newctime/])
 
-;****************************************
-; Find Relevant Model Output
-;****************************************
-
-  files = systemfunc ("ls " + dir + fname + rdir + fname + ".cam."+fincl+"*")
-
-  if (debug) then 
-    nf = 12
+  if (latlon) then
+    ci = newci
+    cj = newcj
+    delete([/newci,newcj/])
   else
-    nf = dimsizes(files)
+    cicol = newcicol
+    delete(newcicol)
   end if
-  print("total files " + nf)
-
-  indraw = new( (/nf/), "integer")
-  do n = 0,nf-1
-
-    in = addfile (files(n),"r")
-    time = in->time
-    delete(in)
-
-    utc = cd_calendar(time,0)
-    smnths = tointeger(utc(:,1))
-    delete(utc)   
-
-    if (monthNam.eq."DEC") then
-      indt = ind(smnths.eq.(imonth+1) .or. smnths.eq.1)
-    else
-      indt = ind(smnths.eq.(imonth+1) .or. smnths.eq.(imonth+2))
-    end if
-
-    if (any(ismissing(indt))) then
-      indraw(n) = indraw@_FillValue
-    else
-      indraw(n) = n
-    end if
-    delete([/time,smnths,indt/])
-  end do
-
-  indgd = ind(.not.ismissing(indraw))
-  ngd = dimsizes(indgd)
-  newfiles = files(indgd)
-
-  print("total "+monthNam+" files " + ngd)
 
 ;****************************************
 ; Begin Loop
@@ -260,15 +305,6 @@ begin
     end if
     var = var*sfactor
     delete(in)
-
-    if (n.eq.0) then
-      ncols = dimsizes(lon1d)
-      latrot1d = new( (/ncols/), "double")
-      lonrot1d = new( (/ncols/), "double")
-
-      lat1drad = lat1d*pi/180.d0
-      lon1drad = lon1d*pi/180.d0
-    end if
 
     utc = cd_calendar(time,0)
     year = tointeger(utc(:,0))
@@ -291,39 +327,28 @@ begin
       indthistrack = ind(.not.ismissing(cyear(m,:)))
 
       do mm = 0,nthistrack-1
-        ;;wc0 = systemfunc("date")
         print("    mm = " + (mm+1) + "/" + nthistrack)
         mmm = indthistrack(mm)
+
         indt = ind(year.eq.cyear(m,mmm) .and. month.eq.cmonth(m,mmm) .and. \
   	           day.eq.cday(m,mmm) .and. hour.eq.chour(m,mmm))
-        indi = cicol(m,mmm)
-
         if (ismissing(indt)) then
           continue
         end if
 
-        ;;;wc0 = systemfunc("date")
-
         ;;rotate storm center to 0deg lat and 0deg lon
-        Plat = -0.5d0*pi + (lat1d(indi)*pi/180.d0)
-        Plon = lon1d(indi)*pi/180.d0
+        if (latlon) then
+          indii = ci(m,mmm)
+          indjj = cj(m,mmm)
+          Plat = -0.5d0*pi + (lat1d(indjj)*pi/180.d0)
+          Plon = lon1d(indii)*pi/180.d0
+        else
+          indi = cicol(m,mmm)
+          Plat = -0.5d0*pi + (lat1d(indi)*pi/180.d0)
+          Plon = lon1d(indi)*pi/180.d0
+        end if
 
-        lattmp = lat1d*pi/180.d0
-        lontmp = lon1d*pi/180.d0
-
-        RIP::regrot(lon1drad,lat1drad,lonrot1d,latrot1d,Plon,Plat,ncols)
-
-        latrot1d = latrot1d*180.d0/pi
-        lonrot1d = lonrot1d*180.d0/pi
-
-        ;;;wallClockElapseTime(wc0, "regrot time", 0)
-        ;;;wc0 = systemfunc("date")
-
-        ;;rotate SCRIP grid
         system("/bin/cp " + srcGrid + " " + srcGridRot)
-
-        ;;;wallClockElapseTime(wc0, "copy SCRIP time", 0)
-        ;;;wc0 = systemfunc("date")
 
         sf = addfile(srcGridRot,"w")         
         dNames = getfiledimnames(sf)
@@ -337,6 +362,7 @@ begin
         grid_center_lat = sf->grid_center_lat
         grid_center_lon = sf->grid_center_lon
 
+        ncols = dimsizes(grid_center_lat)
         do k = 0,ncorners-1
           lattmp = grid_corner_lat(:,k)*pi/180.d0
           lontmp = grid_corner_lon(:,k)*pi/180.d0
@@ -365,31 +391,27 @@ begin
         sf->grid_corner_lon = grid_corner_lon
         delete(sf)
 
-        ;;;wallClockElapseTime(wc0, "rotate SCRIP time", 0)
-        ;;;wc0 = systemfunc("date")
-
         fsrc = addfile(srcGridRot,"r")
         Opt@SrcGridCornerLat      = fsrc->grid_corner_lat
         Opt@SrcGridCornerLon      = fsrc->grid_corner_lon
         ESMF_regrid_gen_weights(srcGridRot,dstGrid,wgtFile,Opt)        
         delete(fsrc)
 
-        ;;;wallClockElapseTime(wc0, "wgt generation time", 0)
-        ;;;wc0 = systemfunc("date")
-
-        var_regrid = ESMF_regrid_with_weights(var(indt,:),wgtFile,False)
-
-        ;;;wallClockElapseTime(wc0, "regrid time", 0)
+        if (latlon) then
+          var_regrid = ESMF_regrid_with_weights(var(indt,:,:),wgtFile,False)
+          delete([/indii,indjj/])
+        else
+          var_regrid = ESMF_regrid_with_weights(var(indt,:),wgtFile,False)
+          delete(indi)
+        end if
 
         print("    max varstorm " + max(var_regrid))
         print("    min varstorm " + min(var_regrid))
 
         allstorms(m,mmm,:,:) = var_regrid
 
-        delete([/indt,indi,Opt@SrcGridCornerLat,Opt@SrcGridCornerLon,var_regrid/])
-
-        ;;wallClockElapseTime(wc0, "    loop time", 0)
-
+        delete([/indt,Opt@SrcGridCornerLat,Opt@SrcGridCornerLon,var_regrid/])
+   
       end do 
       delete(indthistrack)
     end do

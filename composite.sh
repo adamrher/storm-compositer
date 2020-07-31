@@ -4,7 +4,7 @@
 #SBATCH --account=P54048000
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --time=03:00:00
+#SBATCH --time=04:00:00
 #SBATCH --partition=dav
 #SBATCH --output=composite.out.%j
 #SBATCH --mem=300G
@@ -26,4 +26,4 @@ set tname = "/glade/work/aherring/CESM2/ASP/arctic/tempestextremes/detectnodes/d
 #OUTPUT DIRECTORY
 set outdir = ""
 
-ncl 'dir="'$data_dir'"' 'rdir="'$rdir'"' 'fname="'$case'"' 'fincl="'$fincl'"' 'label="'$label'"' 'srcGrid="'$srcGrid'"' 'tname="'$tname'"' 'outdir="'$outdir'"' composite-v6.ncl
+ncl 'dir="'$data_dir'"' 'rdir="'$rdir'"' 'fname="'$case'"' 'fincl="'$fincl'"' 'label="'$label'"' 'srcGrid="'$srcGrid'"' 'tname="'$tname'"' 'outdir="'$outdir'"' composite-v7.ncl
